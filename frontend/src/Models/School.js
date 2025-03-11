@@ -8,8 +8,8 @@ const schoolshema=new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true, // Le mot de passe est obligatoire
-      },
+        required: true, 
+    }
 });
 const School=mongoose.model('School',schoolshema);
 export default School;

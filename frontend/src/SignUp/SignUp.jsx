@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { useState } from 'react'
 
 export default function SingUp () {
@@ -7,8 +8,10 @@ export default function SingUp () {
         schoolName:'',
         email:'',
         password:'',
-        phonNumber:'',
+        phoneNumber:''
     })
+
+    const initialUserDtata = { schoolName:'', email:'', password:'', phoneNumber:''}
 
     // state containe the value of comformation password
     const [validPassword, setValidPassword] = useState('')
@@ -18,8 +21,11 @@ export default function SingUp () {
         schoolName:'',
         email:'',
         password:'',
-        phonNumber:'',
+        phoneNumber:'',
     })
+
+    const[responseMessage, setResponseMessage] = useState('')
+    const[errorMessage, setErrorMessage] = useState('')
 
     // regex of email
     const validateEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -28,39 +34,85 @@ export default function SingUp () {
     const validPhoneNumner = /[0-9]{10}/
 
     //  check the values of the inputs
-    const handleData = (e)=>{
+    const handleData = async (e)=>{
         e.preventDefault()
         let validForm = true
+
         if(userData.schoolName.trim() === ''){
+            validForm = false
             setErrors((prevState)=>({...prevState, schoolName:'Le nom de l\'école oubligatoire'}))
         }else{
             setErrors((prevState)=>({...prevState, schoolName:''}))
         }
+        
         if(userData.email.trim() === ''){
+            validForm = false
             setErrors((prevState)=>({...prevState, email:'L\'émail oubligatoire'}))
         }else if(!userData.email.match(validateEmail)){
+            validForm = false
             setErrors((prevState)=>({...prevState, email:"L'email n'est pas valide"}))
         }else{
             setErrors((prevState)=>({...prevState, email:''}))
         }
+
         if(userData.password.trim() === ''){
+            validForm = false
             setErrors((prevState)=>({...prevState, password:'Mot de passe oubligatoire'}))
         }else if(userData.password.trim().length < 8){
+            validForm = false
             setErrors((prevState)=>({...prevState, password:'Le mot de passe doit contenir au moins 8 caractères'}))
         }else{
             setErrors((prevState)=>({...prevState, password:''}))
         }
-        if(userData.phonNumber.trim() === ''){
-            setErrors((prevState)=>({...prevState, phonNumber:'Numéro de téléphone oubligatoire'}))
-        }else if(!userData.phonNumber.trim().match(validPhoneNumner)){
-            setErrors((prevState)=>({...prevState, phonNumber:'Numéro de téléphone n\'est pas valide'}))
+
+        if(userData.phoneNumber.trim() === ''){
+            validForm = false
+            setErrors((prevState)=>({...prevState, phoneNumber:'Numéro de téléphone oubligatoire'}))
+        }else if(!userData.phoneNumber.trim().match(validPhoneNumner)){
+            validForm = false
+            setErrors((prevState)=>({...prevState, phoneNumber:'Numéro de téléphone n\'est pas valide'}))
         }else{
-            setErrors((prevState)=>({...prevState, phonNumber:''}))
+            setErrors((prevState)=>({...prevState, phoneNumber:''}))
+        }
+
+
+
+
+        try{
+            if(validForm){
+                const response = await axios.post('http://localhost:5001/api/register',userData)
+        
+                if(response.data.message){
+                    setErrorMessage('')
+                    setResponseMessage(response.data.message)
+                    setUserDta(initialUserDtata)
+                }else{
+                    setErrorMessage(response.data.error)
+                }
+            }
+        }catch(error){
+            // console.log('ERROR', error);
+            if (error.response) {
+                // console.log('Réponse serveur (erreur):', error.response.data);
+                setResponseMessage('')
+                setErrorMessage(error.response.data.error || "Une erreur est survenue lors de l'inscription.");
+            } else {
+                setResponseMessage('')
+                setErrorMessage("Problème de connexion au serveur.");
+            }
         }
     }
 
     return (
         <div>
+            {responseMessage && <div className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                                    <span className="font-medium"> {responseMessage}</span> 
+                                </div>
+            }
+            {errorMessage && <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                                    <span className="font-medium"> {errorMessage}</span> 
+                                </div>
+            }
             <div className='h-screen lg:flex md:block sm:block items-center justify-around'>
                 <div className='lg:w-1/2 xl:w-1/2 2xl:w-1/2 md:w-full sm:w-full text-center h-1/2 grid place-items-center'>
                     <div>
@@ -73,12 +125,13 @@ export default function SingUp () {
                     </div>
                 </div>
                 <div className='lg:w-1/2 xl:w-1/2 2xl:w-1/2 w-full pb-4'>
+
                     <form className="w-11/12 lg:w-9/12 mx-auto" onSubmit={handleData}> 
                         <div>
                             <h1 className='mb-6 text-xl font-bold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-5xl dark:text-white'> Créer un compt</h1>
                         </div>
                         <div className="relative z-0 w-full mb-5 group">
-                            <input type="text" onChange={(e)=>{setUserDta((prevState)=>({...prevState, email:e.target.value}))}} name="floating_email" id="floating_email" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "  />
+                            <input type="email" onChange={(e)=>{setUserDta((prevState)=>({...prevState, email:e.target.value}))}} name="floating_email" id="floating_email" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "  />
                             <label htmlFor="floating_email" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email address</label>
                             <p className='text-red-600'>{errors.email}</p>
                         </div>
@@ -99,13 +152,13 @@ export default function SingUp () {
                                 <p className='text-red-600'>{errors.schoolName}</p>
                             </div>
                             <div className="relative z-0 w-full mb-5 group">
-                                <input type="tel" onChange={(e)=>{setUserDta((prevState)=>({...prevState, phonNumber:e.target.value}))}} name="floating_phone" id="floating_phone" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "  />
+                                <input type="tel" onChange={(e)=>{setUserDta((prevState)=>({...prevState, phoneNumber:e.target.value}))}} name="floating_phone" id="floating_phone" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "  />
                                 <label htmlFor="floating_phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Numéro téléphone (+212 00-0000-000)</label>
-                                <p className='text-red-600'>{errors.phonNumber}</p>
+                                <p className='text-red-600'>{errors.phoneNumber}</p>
                             </div>
                         </div>
                         <p className='mb-3'>
-                            Déjà inscrit ? <span className='text-blue-600'>Se connecter</span>
+                            Déjà inscrit ? <button className='text-blue-600'>Se connecter</button>
                         </p>
                         <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
                     </form>
