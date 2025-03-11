@@ -138,7 +138,7 @@ function Contact() {
         {/* Google Maps */}
         <div className="mt-10">
           <iframe
-            className="w-full h-96 rounded-lg shadow-md"
+            className="w-full h-70 rounded-lg shadow-md"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d107049.24673872803!2d-7.684973944456687!3d33.572411002383825!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7cd267f21d0e9%3A0x81d2a00c0c8db0b7!2sCasablanca%2C%20Maroc!5e0!3m2!1sfr!2sma!4v1649865246325"
             allowFullScreen
             loading="lazy"
