@@ -19,7 +19,7 @@ app.post("/api/contact", async (req, res) => {
             return res.status(400).json({ success: false, message: "Tous les champs sont obligatoires !" });
         }
 
-        // Sauvegarde dans MongoDB
+        
         const newContact = new Contacts({ nom, email, sujet, message });
         await newContact.save();
 
@@ -31,6 +31,10 @@ app.post("/api/contact", async (req, res) => {
 
 app.post('/api/check-login', async (req, res) => {
   const { email, password } = req.body;
+  if ( !email || !password ) {
+    return res.status(400).json({ success: false, message: "Tous les champs sont obligatoires !" });
+}
+
   const user = await User.findOne({ email });
   if (user) {
     if (user.password === password) {

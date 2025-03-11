@@ -12,10 +12,7 @@ function Login() {
       navigate("/Signup");
     }
     const ClickSubmit = async (e) => {
-      if(!email || !password){
-        setMessage("Les deux champs sans Obligatoires !!");
-        
-      }
+     
       e.preventDefault();
       try {
         const response = await axios.post("http://localhost:5001/api/check-login", { email, password });
