@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 import User from '../Models/User.js';
 import School from '../Models/School.js';
-import Contacts from '../Models/Contact.js';
+// import Contacts from '../Models/Contact.js';
 import Inscription from '../Models/inscription.js'
 // Connecter MongoDB
 mongoose.connect("mongodb+srv://omaimaelbdraouy:r9oc2gzlMHYB0ZEH@cluster0.uapyf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
@@ -53,7 +53,7 @@ app.post('/api/check-login', async (req, res) => {
   return res.status(400).json({ message: 'Email non trouvé'});
 });
 
-
+// Sign up
 app.post('/api/register', async (req, res) => {
   try {
       const { schoolName, email, password, phoneNumber } = req.body;
