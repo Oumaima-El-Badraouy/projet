@@ -9,7 +9,7 @@ import School from '../Models/School.js';
 // Connecter MongoDB
 mongoose.connect("mongodb://omaimaelbdraouy:r9oc2gzlMHYB0ZEH@federateddatabaseinstance0-uapyf.a.query.mongodb.net/?ssl=true&authSource=admin")
   .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error('MongoDB connection error:', err));ok chouf khli nmrtk bach nhdrou ela les fonctions li raykounou w n9smou les task ana f les projets mrra mrra kandirou teams lakan chy mochkil wla chy haja
+  .catch((err) => console.error('MongoDB connection error:', err));
 
 
 app.post('/api/check-login', async (req, res) => {
