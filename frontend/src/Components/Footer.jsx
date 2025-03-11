@@ -37,21 +37,21 @@ const Footer = () => {
           <div>
             <h5 className="text-white mb-4">Nos Services</h5>
             <ul className="space-y-2">
-              <li><a className="hover:text-sky-400" href="#">Orientation scolaire</a></li>
-              <li><a className="hover:text-white" href="#">Tests d'aptitude</a></li>
-              <li><a className="hover:text-white" href="#">Coaching étudiant</a></li>
-              <li><a className="hover:text-white" href="#">Événements d'orientation</a></li>
-              <li><a className="hover:text-white" href="#">Support aux étudiants</a></li>
+              <li><a className="hover:text-blue-700" href="#">Orientation scolaire</a></li>
+              <li><a className="hover:text-blue-700" href="#">Tests d'aptitude</a></li>
+              <li><a className="hover:text-blue-700" href="#">Coaching étudiant</a></li>
+              <li><a className="hover:text-blue-700" href="#">Événements d'orientation</a></li>
+              <li><a className="hover:text-blue-700" href="#">Support aux étudiants</a></li>
             </ul>
           </div>
 
           {/* Liens rapides */}
           <div>
             <h5 className="text-white mb-4">Liens rapides</h5>
-            <ul className="space-y-2">
-              <li><a className="hover:text-white" href="/About">À propos</a></li>
-              <li><a className="hover:text-white" href="/Contact">Contact</a></li>
-              <li><a className="hover:text-white" href="#">Assistance</a></li>
+            <ul className="space-y-2 text-blue-700">
+              <li><a className="hover:text-blue-700" href="/About">À propos</a></li>
+              <li><a className="hover:text-blue-700" href="/Contact">Contact</a></li>
+              <li><a className="hover:text-blue-700" href="#">Assistance</a></li>
             </ul>
           </div>
 
