@@ -3,11 +3,11 @@
     background-color: #ffffff;
     height: 100vh;
     display: flex;
-    justify-content: center; /* Aligner à gauche */
+    justify-content: center; 
     align-items: center;
     font-family: Arial, sans-serif;
-    padding-left: 5rem;
-    gap: 3rem;
+    padding-left: 4rem;
+    gap: 15rem;
   }
   
   /* Texte et logo */
@@ -145,7 +145,6 @@
       max-width: 90%;
       gap: 2rem;
     }
-  
     .text-box {
       text-align: center;
     }
@@ -196,4 +195,24 @@
   .back-btn:hover {
     background-color: #1e3a8a;
   }
-  
+  .input-group {
+  margin-bottom: 10px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.input-field.error {
+  border-color: red;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}

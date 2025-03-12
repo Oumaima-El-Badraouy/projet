@@ -127,7 +127,7 @@ function Contact() {
               <ToastContainer />
               <button 
   type="submit" 
-  className="mt-4 bg-sky-400 text-sky-500 px-6 py-3 rounded-lg w-full hover:bg-sky-500 hover:text-blue border border-sky-400 transition duration-300">
+  className="mt-4 bg-sky-400 text-white px-6 py-3 rounded-lg w-full hover:bg-sky-500 hover:text-white border border-sky-400 transition duration-300">
   Envoyer
 </button>
 
@@ -151,4 +151,4 @@ function Contact() {
    );
 }
 
-export default Contact
+export default Contact;

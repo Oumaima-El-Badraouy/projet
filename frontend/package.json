@@ -14,6 +14,7 @@
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@tailwindcss/vite": "^4.0.12",
     "axios": "^1.8.2",
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "chalk": "^5.4.1",
     "cors": "^2.8.5",

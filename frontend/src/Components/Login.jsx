@@ -1,84 +1,104 @@
-import React , { useState }from 'react';
+import React, { useState } from 'react';
 import './Login.css';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
 function Login() {
   const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
-    const [messageType, setMessageType] = useState(''); 
-   const navigate = useNavigate();
-    const clickaccount=()=>{
-      navigate("/Signup");
-    }
-    const ClickSubmit = async (e) => {
-     
-      e.preventDefault();
-      try {
-        const response = await axios.post("http://localhost:5001/api/check-login", { email, password });
-        setMessage(response.data.message);
-        navigate(response.data.redirect);
-        setMessageType('true');
-      } catch (error) {
-        if(!email || !password){
-           setMessage(error.response?.data.message || "Les deux champs sans Obligatoires !!");
-        setMessageType('false');
-          
-        }
-        else{
-          setMessage(error.response?.data.message || "Error dons la connexion !");
-          setMessageType('false');
-        }
-       
-      }
-    };
-    
-  return (
-    
-  <div className='login-container'>
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({}); 
+  const navigate = useNavigate();
 
+  const validateField = (field, value) => {
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      [field]: value ? "" : (field === "email" ? "L'email est obligatoire !" : "Le mot de passe est obligatoire !")
+    }));
+  };
+
+  const clickAccount = () => {
+    navigate("/Signup");
+  };
+
+  const ClickSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      setErrors({
+        email: email ? "" : "L'email est obligatoire !",
+        password: password ? "" : "Le mot de passe est obligatoire !"
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:5001/api/check-login", { email, password });
+      navigate(response.data.redirect);
+    } catch (error) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        form: error.response?.data.message || "Erreur dans la connexion !"
+      }));
+    }
+  };
+
+  return (
+    <div className='login-container'>
       <div className='text-box'>
         <h1 className='logo'>DALLEEL</h1>
-        <h4 className='subtitle'>
-                Ensemble vers un 
-                     <br /> meilleur avenir !
-        </h4>
+        <h4 className='subtitle'>Ensemble vers un <br /> meilleur avenir !</h4>
       </div>
+
       <div className='form-container'>
-   
+        <form className='login-form' onSubmit={ClickSubmit}>
+          <div className="input-group">
+            <input
+              type='email'
+              placeholder='Email'
+              className={`input-field ${errors.email ? 'error' : ''}`}
+              value={email}
+              onBlur={() => validateField("email", email)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                validateField("email", e.target.value);
+              }}
+            />
+            {errors.email && <p className="error-message">{errors.email}</p>}
+          </div>
 
-        <form className='login-form' >
-          <input
-            type='email'
-            placeholder='Email'
-            className='input-field'
-            onChange={(e)=>setEmail(e.target.value)} required
-          />
-      
-          <input
-            type='password'
-            placeholder='Mot de passe'
-            className='input-field'
-            onChange={(e)=>setPassword(e.target.value)}
-            required
-          />
-<p className={`message ${messageType}`}>{message}</p>
+          <div className="input-group">
+            <input
+              type='password'
+              placeholder='Mot de passe'
+              className={`input-field ${errors.password ? 'error' : ''}`}
+              value={password}
+              onBlur={() => validateField("password", password)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                validateField("password", e.target.value);
+              }}
+            />
+            {errors.password && <p className="error-message">{errors.password}</p>}
+          </div>
 
-          
-            <button className='login-button'onClick={ClickSubmit}>
-              Se connecter
-            </button> 
-           <p> <a href='/ForgetPassword' className='forgot-password-link'>
+          {errors.form && <p className="error-message">{errors.form}</p>}
+
+          <button type='submit' className='login-button'>
+            Se connecter
+          </button> 
+
+          <p>
+            <NavLink to='/ForgetPassword' className='forgot-password-link'>
               Mot de passe oublié ?
-            </a></p>
-         
+            </NavLink>
+          </p>
 
           <div className='create-account'>
             <p className='account-text'>
               Vous n'avez pas de compte ?{' '}
-              <a href='/create-account' className='create-account-link'onClick={clickaccount}>
+              <NavLink to='/create-account' className='create-account-link' onClick={clickAccount}>
                 Créez un nouveau compte
-              </a>
+              </NavLink>
             </p>
           </div>
         </form>
