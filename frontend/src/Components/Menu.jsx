@@ -30,7 +30,7 @@ function Menu() {
               <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
                 <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
                   <li>
-                    <a href="/home" className="block py-2 px-3 text-sky-500 bg-sky-700 rounded-sm md:bg-transparent md:text-sky-500 md:p-0 md:dark:text-sky-300" aria-current="page">Home</a>
+                    <NavLink to="/home" className="block py-2 px-3 text-sky-500 bg-sky-700 rounded-sm md:bg-transparent md:text-sky-500 md:p-0 md:dark:text-sky-300" aria-current="page">Home</NavLink>
                   </li>
                   <li>
                     <a href="/About" className="block py-2 px-3 text-sky-500 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-sky-500 md:p-0 md:dark:hover:text-sky-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>

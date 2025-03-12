@@ -45,7 +45,7 @@ app.post('/api/check-login', async (req, res) => {
   const school = await School.findOne({ email });
   if (school) {
     if (school.password === password) {
-      return res.json({ message: 'Connexion réussie en tant qu\'école!', redirect: '/school' });
+      return res.json({ message: 'Connexion réus  sie en tant qu\'école!', redirect: '/school' });
     } else {
       return res.status(400).json({ message: 'Mot de passe incorrect pour l\'école' });
     }
@@ -57,17 +57,29 @@ app.post('/api/check-login', async (req, res) => {
 app.post('/api/register', async (req, res) => {
   try {
       const { schoolName, email, password, phoneNumber } = req.body;
-      const existSchool = await Inscription.findOne({ email });
+      const existEmail = await Inscription.findOne({ email });
+      const existPhoneNumber = await Inscription.findOne({phoneNumber})
+      const existSchoolName = await Inscription.findOne({schoolName})
 
-      if (existSchool) {
-          return res.status(400).json({ error: "L'utilisateur existe déjà." });
+      if (existEmail || existPhoneNumber || existSchoolName) {
+          if(existEmail){
+            return res.status(400).json({ error: "Email existe déjà." });
+          }
+
+          if(existSchoolName){
+            return res.status(400).json({ error: "Le nom d'école existe déjà." });
+          }
+
+          if(existPhoneNumber){
+            return res.status(400).json({ error: "Numéro de téléphone existe déjà." });
+          }
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const newSchool = new Inscription({ email, password: hashedPassword, schoolName, phoneNumber });
       await newSchool.save();
 
-      console.log('ECOLE enregistré avec succès');
+      // console.log('ECOLE enregistré avec succès');
       res.status(201).json({ message: "Ecole enregistré avec succès" });
 
   } catch (error) {

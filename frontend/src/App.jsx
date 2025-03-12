@@ -8,12 +8,14 @@ import Menu from "./Components/Menu";
 // import About from "./Components/About";
 import { ToastContainer } from 'react-toastify';
 import SingUp from "./SignUp/SignUp";
+import Home from "./Home/home";
 function App() {
     return (
    <Router>
             <Routes>
                 <Route path="/" element={<Menu/>}>
                     <Route path="/Login" element={<Login />} />
+                    <Route path="/home" element={<Home />} />
                     {/* <Route path="/Menu" element={<Menu />} /> */}
                     {/* <Route path="/ForgetPassword" element={<ForgetPassword />} /> */}
                     <Route path="/signup" element={<SingUp/>}/>
@@ -21,7 +23,7 @@ function App() {
                     {/* <Route path="/Contact" element={<Contact />} /> */}
                 </Route>
             </Routes>
-</Router>
+    </Router>
     );
 }
 
