@@ -2,9 +2,13 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import User from '../Models/User.js';
 import Contacts from '../Models/Contact.js';
 import Inscription from '../Models/inscription.js';
+import nodemailer from "nodemailer";
+import jwt  from "jsonwebtoken";
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -32,6 +36,112 @@ app.post("/api/contact", async (req, res) => {
     }
 });
 
+
+app.post('/forgot-password', async (req, res) => {
+    try {
+        console.log("Requête reçue avec :", req.body);
+
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).send('Email requis');
+        }
+
+        const user = await Inscription.findOne({ email });
+        if (!user) {
+          return res.status(404).send('Utilisateur non trouvé');
+        }
+
+        const token = crypto.randomBytes(20).toString('hex');
+        user.resetToken = token;
+        user.resetTokenExpiry = Date.now() + 3600000; // Expiration du token après 1 heure
+    
+        // Sauvegarder l'utilisateur avec le token
+        await user.save();
+    
+        // Configurer le transporteur Nodemailer pour l'envoi de l'email
+        // const transporter = nodemailer.createTransport({
+        //   service: 'Gmail',
+        //   auth: {
+        //     user: 'omaimaelbdraouy@gmail.com',  // Remplace par ton email
+        //     pass: 'rhem drbk tcmn aoup',     // Remplace par ton mot de passe
+        //   },
+        // });
+        const transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+              user: 'omaimaelbdraouy@gmail.com',
+              pass: 'rhem drbk tcmn aoup',  // Utilise ton mot de passe d'application
+            },
+          });
+          
+          transporter.verify((error, success) => {
+            if (error) {
+              console.log('Erreur de connexion :', error);
+            } else {
+              console.log('Connexion réussie:', success);
+            }
+          });
+          
+    
+        // Options de l'email
+        const mailOptions = {
+          to: user.email,
+          from: 'omaimaelbdraouy@gmail.com',
+          subject: 'Réinitialisation du mot de passe',
+          text: `Cliquez sur le lien suivant pour réinitialiser votre mot de passe :\n\nhttp://localhost:5173/reset-password/${token}\n\nCe lien est valable pendant 1 heure.`,
+        };
+        await transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Erreur lors de l\'envoi de l\'email:', error);
+              return res.status(500).send("Erreur lors de l'envoi de l'email");
+            }
+            console.log('Email envoyé:', info.response);
+            res.status(200).send('Email envoyé avec succès !');
+          });
+          
+       
+    
+      } catch (error) {
+        console.error('Erreur :', error);
+        res.status(500).send("Erreur lors de l'envoi de l'email");
+      }
+    });
+
+  
+
+    app.post('/reset-password/:token', async (req, res) => {
+        const { token } = req.params;
+        const { newPassword } = req.body;
+    
+        try {
+            const user = await Inscription.findOne({
+                resetToken: token,
+                resetTokenExpiry: { $gt: Date.now() },
+            });
+    
+            if (!user) {
+                return res.status(400).send('Token invalide ou expiré');
+            }
+    
+            // Hacher le mot de passe avant de le sauvegarder
+            const hashedPassword = await bcrypt.hash(newPassword, 10); // Hachage avec un salt de 10 tours
+            user.password = hashedPassword;
+    
+            // Supprimer les informations de token de réinitialisation
+            user.resetToken = undefined;
+            user.resetTokenExpiry = undefined;
+    
+            await user.save(); // Sauvegarder l'utilisateur avec le mot de passe mis à jour
+    
+            res.status(200).send('Mot de passe réinitialisé avec succès!');
+        } catch (error) {
+            console.error('Erreur :', error);
+            res.status(500).send("Erreur lors de la réinitialisation du mot de passe");
+        }
+    });
+    
+    
+
 // Route de connexion
 app.post('/api/check-login', async (req, res) => {
     try {
@@ -41,41 +151,55 @@ app.post('/api/check-login', async (req, res) => {
             return res.status(400).json({ success: false, message: "Tous les champs sont obligatoires !" });
         }
 
-        // Vérifier dans les collections User et School
         let user = await User.findOne({ email });
-        if (user && await bcrypt.compare(password, user.password)) {
-            return res.json({ message: 'Connexion réussie en tant qu\'utilisateur!', redirect: '/user' });
+        if (user) {
+            // Comparer le mot de passe haché avec le mot de passe saisi
+            if (await bcrypt.compare(password, user.password)) {
+                return res.json({ message: 'Connexion réussie en tant que utilisateur!', redirect: '/user' });
+            }
         }
 
         let school = await Inscription.findOne({ email });
-        if (school && await bcrypt.compare(password, school.password)) {
-            return res.json({ message: 'Connexion réussie en tant qu\'école!', redirect: '/school' });
+        if (school) {
+            // Comparer le mot de passe haché avec le mot de passe saisi
+            if (await bcrypt.compare(password, school.password)) {
+                return res.json({ message: 'Connexion réussie en tant que école!', redirect: '/school' });
+            }
         }
 
         return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
-
     } catch (error) {
         res.status(500).json({ message: "Erreur interne du serveur" });
     }
 });
+
 
 // Route d'inscription
 app.post('/api/register', async (req, res) => {
     try {
         const { schoolName, email, password, phoneNumber } = req.body;
 
-        const existSchool = await Inscription.findOne({ email });
-        if (existSchool) {
-            return res.status(400).json({ error: "L'utilisateur existe déjà." });
+        const existEmail = await Inscription.findOne({ email });
+        const existPhoneNumber = await Inscription.findOne({ phoneNumber });
+        const existSchoolName = await Inscription.findOne({ schoolName });
+
+        if (existEmail || existPhoneNumber || existSchoolName) {
+            if (existEmail) {
+                return res.status(400).json({ error: "Email existe déjà." });
+            }
+            if (existSchoolName) {
+                return res.status(400).json({ error: "Le nom d'école existe déjà." });
+            }
+            if (existPhoneNumber) {
+                return res.status(400).json({ error: "Numéro de téléphone existe déjà." });
+            }
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const newSchool = new Inscription({ email, password: hashedPassword, schoolName, phoneNumber });
         await newSchool.save();
 
-        console.log('École enregistrée avec succès');
         res.status(201).json({ message: "École enregistrée avec succès" });
-
     } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).json({ error: 'Erreur interne du serveur' });

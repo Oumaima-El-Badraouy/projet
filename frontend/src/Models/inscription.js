@@ -21,7 +21,9 @@ const inscriptionshema = new mongoose.Schema({
         required: true,
         unique:true,
         trim:true,
-    }
+    },
+    resetToken: String, // Le token de réinitialisation
+    resetTokenExpiry: Date,
 });
 const inscription = mongoose.model('Inscription',inscriptionshema);
 export default inscription;

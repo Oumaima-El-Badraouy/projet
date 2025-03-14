@@ -88,7 +88,7 @@ function Login() {
           </button> 
 
           <p>
-            <NavLink to='/ForgetPassword' className='forgot-password-link'>
+            <NavLink to='/Forgotpassword' className='forgot-password-link'>
               Mot de passe oublié ?
             </NavLink>
           </p>
@@ -96,7 +96,7 @@ function Login() {
           <div className='create-account'>
             <p className='account-text'>
               Vous n'avez pas de compte ?{' '}
-              <NavLink to='/create-account' className='create-account-link' onClick={clickAccount}>
+              <NavLink to='/Signup' className='create-account-link' onClick={clickAccount}>
                 Créez un nouveau compte
               </NavLink>
             </p>
