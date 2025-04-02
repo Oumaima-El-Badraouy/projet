@@ -6,15 +6,16 @@ import crypto from 'crypto';
 import User from '../Models/User.js';
 import Contacts from '../Models/Contact.js';
 import Inscription from '../Models/inscription.js';
+import UserConnecté from '../Models/UsersConnecté.js';
+import UserNONConnecté from '../Models/UserNONConnecté.js';
 import nodemailer from "nodemailer";
 import jwt  from "jsonwebtoken";
-
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 // Connecter MongoDB
-mongoose.connect("mongodb+srv://omaimaelbdraouy:r9oc2gzlMHYB0ZEH@cluster0.uapyf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect("mongodb+srv://oumaima:ZrpOtXRKpZAkjcEF@cluster0.uapyf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
@@ -54,18 +55,8 @@ app.post('/forgot-password', async (req, res) => {
         const token = crypto.randomBytes(20).toString('hex');
         user.resetToken = token;
         user.resetTokenExpiry = Date.now() + 3600000; // Expiration du token après 1 heure
-    
-        // Sauvegarder l'utilisateur avec le token
         await user.save();
     
-        // Configurer le transporteur Nodemailer pour l'envoi de l'email
-        // const transporter = nodemailer.createTransport({
-        //   service: 'Gmail',
-        //   auth: {
-        //     user: 'omaimaelbdraouy@gmail.com',  // Remplace par ton email
-        //     pass: 'rhem drbk tcmn aoup',     // Remplace par ton mot de passe
-        //   },
-        // });
         const transporter = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
@@ -141,7 +132,29 @@ app.post('/forgot-password', async (req, res) => {
     });
     
     
-
+app.post("/api/users/import", async (req, res) => {
+    const users = req.body;
+  
+    if (!Array.isArray(users) || users.length === 0) {
+      return res.status(400).json({ message: "Données invalides" });
+    }
+  
+    try {
+      const hashedUsers = await Promise.all(
+        users.map(async (user) => ({
+          nom: user.nom,
+          email: user.email,
+          password: await bcrypt.hash(user.password, 10), // Hachage du mot de passe
+        }))
+      );
+  
+      await User.insertMany(hashedUsers);
+      res.json({ message: "Utilisateurs enregistrés avec succès !" });
+    } catch (error) {
+      res.status(500).json({ message: "Erreur lors de l'enregistrement." });
+    }
+  });
+  
 // Route de connexion
 app.post('/api/check-login', async (req, res) => {
     try {
@@ -155,7 +168,8 @@ app.post('/api/check-login', async (req, res) => {
         if (user) {
             // Comparer le mot de passe haché avec le mot de passe saisi
             if (await bcrypt.compare(password, user.password)) {
-                return res.json({ message: 'Connexion réussie en tant que utilisateur!', redirect: '/user' });
+           
+                return res.json({ message: 'Connexion réussie en tant que utilisateur!', redirect: `/user/${user._id}` });
             }
         }
 
@@ -163,8 +177,12 @@ app.post('/api/check-login', async (req, res) => {
         if (school) {
             // Comparer le mot de passe haché avec le mot de passe saisi
             if (await bcrypt.compare(password, school.password)) {
-                return res.json({ message: 'Connexion réussie en tant que école!', redirect: '/school' });
-            }
+            
+
+            // Sauvegarder l'utilisateur non connecté dans la base de données
+            await UserNONConnecté.save();
+                return res.json({ message: 'Connexion réussie en tant que école!', redirect: `/school/${school._id}` });
+        }
         }
 
         return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
@@ -198,12 +216,61 @@ app.post('/api/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newSchool = new Inscription({ email, password: hashedPassword, schoolName, phoneNumber });
         await newSchool.save();
-
+console.log(newSchool._id);
         res.status(201).json({ message: "École enregistrée avec succès" });
     } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).json({ error: 'Erreur interne du serveur' });
     }
+});
+app.post('/api/connected-users', async (req, res) => {
+  try {
+      const { email, password, name } = req.body;
+
+      // Vérifier si l'utilisateur existe déjà
+      const existingUser = await UserConnecté.findOne({ email });
+      if (existingUser) {
+          return res.status(400).json({ message: 'L\'utilisateur est déjà connecté.' });
+      }
+
+      const newUser = new UserConnecté({
+          email,
+          password,  // Assure-toi de hasher le mot de passe avant de le stocker
+          name,
+          connectedAt: new Date(),
+          lastActivityAt: new Date(),
+      });
+
+      await newUser.save();
+      res.status(201).json({ message: 'Utilisateur connecté avec succès.', user: newUser });
+  } catch (error) {
+      res.status(500).json({ message: 'Erreur interne du serveur.', error });
+  }
+});
+app.get('/api/connected-users', async (req, res) => {
+  try {
+      const users = await UserNONConnecté.find();
+      res.json({ users });
+  } catch (error) {
+      res.status(500).json({ message: 'Erreur interne du serveur.', error });
+  }
+});
+app.put('/api/connected-users/:id', async (req, res) => {
+  try {
+      const { id } = req.params;
+
+      const user = await UserConnecté.findById(id);
+      if (!user) {
+          return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+      }
+
+      user.lastActivityAt = new Date();  // Mettre à jour la dernière activité
+      await user.save();
+
+      res.json({ message: 'Activité mise à jour.', user });
+  } catch (error) {
+      res.status(500).json({ message: 'Erreur interne du serveur.', error });
+  }
 });
 
 // Démarrer le serveur

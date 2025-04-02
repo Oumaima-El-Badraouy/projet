@@ -9,16 +9,22 @@ import About from "./Components/About";
 import { ToastContainer } from 'react-toastify';
 import SingUp from "./SignUp/SignUp";
 import ResetPassword from './Components/ResetPassword';
+import SchoolPage from './School/SchoolPage';
 import Home from "./Home/Home";
+import Menuuser from "./School/Menuuser";
+import Ecoles from "./School/Ecoles/Ecoles";
+import etudiants_connecté from "./School/Users/etudiants_connecté";
 function App() {
     return (
    <Router>
             <Routes>
                 <Route path="/" element={<Menu/>}>
+              
+
                     <Route path="/Login" element={<Login />} />
-
+                    
                     <Route path="/Menu" element={<Menu />} />
-
+                   
                     <Route path="/home" element={<Home />} />
                     <Route path="/signup" element={<SingUp/>}/>
                 <Route path="/About" element={<About />} /> 
@@ -29,6 +35,10 @@ function App() {
                 
 
                 </Route>
+                <Route path="/" element={<Menuuser />} >
+                    <Route path="/school/:id" element={<SchoolPage />} />
+                    <Route path="/ecoles" element={<Ecoles />} />
+                </Route>  <Route path="/Étudiants_connectés" element={<etudiants_connecté />} />
             </Routes>
     </Router>
     );

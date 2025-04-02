@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Login.css';
 import axios from 'axios';
 import { NavLink, useNavigate } from "react-router-dom";
+import UserNONConnecté from '../Models/UserNONConnecté';
 
 function Login() {
   const [email, setEmail] = useState('');
