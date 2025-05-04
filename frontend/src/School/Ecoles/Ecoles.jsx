@@ -1,46 +1,62 @@
-// src/pages/Ecoles.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const Ecoles = () => {
-  const [ecoles, setEcoles] = useState([
-    { id: 1, nom: 'École A', admin: true },
-    { id: 2, nom: 'École B', admin: false },
-  ]);
-  const [nouvelleEcole, setNouvelleEcole] = useState('');
+function Ecoles() {
+  const [ecoles, setEcoles] = useState([]);
+    const [searchitem, setsearch] = useState("");
 
-  const ajouterEcole = () => {
-    if (nouvelleEcole.trim()) {
-      setEcoles([...ecoles, { id: Date.now(), nom: nouvelleEcole, admin: false }]);
-      setNouvelleEcole('');
-    }
-  };
+  useEffect(() => {
+    fetchecoles();
+  }, []);
 
-  const supprimerEcole = (id) => {
-    setEcoles(ecoles.filter(ecole => ecole.id !== id || ecole.admin));
+  const fetchecoles = async () => {
+    const response = await axios.get("http://localhost:5001/api/ecoles");
+    setEcoles(response.data);
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-bold mb-4">Gérer les Écoles</h2>
-      <input 
-        type="text" 
-        className="border p-2 mr-2" 
-        value={nouvelleEcole} 
-        onChange={(e) => setNouvelleEcole(e.target.value)}
-        placeholder="Ajouter une école"
+    <div className="p-4 font-sans sm:ml-72">
+      <h1 className="text-2xl font-bold text-center mb-6">Liste des écoles</h1>
+      <input
+        type="text"
+        placeholder="Rechercher une école..."
+        value={searchitem}
+        onChange={(e) => setsearch(e.target.value)}
+        className="w-full max-w-md mb-4 px-4 py-2 border border-gray-300 rounded-md shadow-sm"
       />
-      <button className="bg-blue-500 text-white px-4 py-2" onClick={ajouterEcole}>Ajouter</button>
-      <ul className="mt-4">
-        {ecoles.map(ecole => (
-          <li key={ecole.id} className="flex justify-between p-2 border-b">
-            {ecole.nom} {!ecole.admin && (
-              <button className="bg-red-500 text-white px-2" onClick={() => supprimerEcole(ecole.id)}>Supprimer</button>
-            )}
-          </li>
-        ))}
-      </ul>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white rounded-lg shadow-md text-sm sm:text-base">
+          <thead className="bg-gray-200 text-gray-700">
+            <tr>
+              <th className="px-4 py-2 border">Nom</th>
+              <th className="px-4 py-2 border">Description</th>
+              <th className="px-4 py-2 border">Niveau du Bac</th>
+              <th className="px-4 py-2 border">Lieu</th>
+            </tr>
+          </thead>
+          <tbody>
+          {ecoles
+  .filter((ecole) =>
+    (ecole.nom?.toLowerCase() ?? "").includes(searchitem.toLowerCase()) ||
+    (ecole.description?.toLowerCase() ?? "").includes(searchitem.toLowerCase()) ||
+    (ecole.niveauBac?.toLowerCase() ?? "").includes(searchitem.toLowerCase()) ||
+    (ecole.lieu?.toLowerCase() ?? "").includes(searchitem.toLowerCase())
+  )
+  .map((ecole) => (
+    <tr key={ecole._id} className="border-t hover:bg-gray-50">
+      <td className="px-4 py-2 border">{ecole.nom}</td>
+      <td className="px-4 py-2 border">{ecole.description}</td>
+      <td className="px-4 py-2 border">{ecole.niveauBac}</td>
+      <td className="px-4 py-2 border">{ecole.lieu}</td>
+    </tr>
+  ))}
+
+          </tbody>
+        </table>
+      </div>
     </div>
   );
-};
+}
 
 export default Ecoles;

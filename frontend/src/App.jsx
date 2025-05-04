@@ -13,7 +13,11 @@ import SchoolPage from './School/SchoolPage';
 import Home from "./Home/Home";
 import Menuuser from "./School/Menuuser";
 import Ecoles from "./School/Ecoles/Ecoles";
-import etudiants_connecté from "./School/Users/etudiants_connecté";
+import EtudiantsNonConnecté  from "./School/Users/etudiants_non_connecté";
+import EtudiantsConnecté  from "./School/Users/etudiants_connecté";
+import Domaines  from "./School/Users/Domaines";
+import Evenements  from "./School/Users/Evenements";
+
 function App() {
     return (
    <Router>
@@ -22,10 +26,7 @@ function App() {
               
 
                     <Route path="/Login" element={<Login />} />
-                    
-                    <Route path="/Menu" element={<Menu />} />
-                   
-                    <Route path="/home" element={<Home />} />
+                    <Route index element={<Home />} />
                     <Route path="/signup" element={<SingUp/>}/>
                 <Route path="/About" element={<About />} /> 
                     <Route path="/Contact" element={<Contact />} /> 
@@ -38,7 +39,11 @@ function App() {
                 <Route path="/" element={<Menuuser />} >
                     <Route path="/school/:id" element={<SchoolPage />} />
                     <Route path="/ecoles" element={<Ecoles />} />
-                </Route>  <Route path="/Étudiants_connectés" element={<etudiants_connecté />} />
+                   <Route path="/Étudiants_non_connectés" element={<EtudiantsNonConnecté />} />
+                   <Route path="/Étudiants_connectés" element={<EtudiantsConnecté />} />
+                   <Route path="/Domaines" element={<Domaines />} />
+                   <Route path="/Evenement" element={<Evenements />} />
+                </Route>  
             </Routes>
     </Router>
     );

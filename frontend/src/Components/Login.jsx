@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Login.css';
 import axios from 'axios';
 import { NavLink, useNavigate } from "react-router-dom";
-import UserNONConnecté from '../Models/UserNONConnecté';
+import UserNONConnecté from '../Backend/Models/UserNONConnecté';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -34,6 +34,9 @@ function Login() {
 
     try {
       const response = await axios.post("http://localhost:5001/api/check-login", { email, password });
+      if (response.data.id) {
+        localStorage.setItem("schoolId", response.data.id); 
+      }
       navigate(response.data.redirect);
     } catch (error) {
       setErrors(prevErrors => ({

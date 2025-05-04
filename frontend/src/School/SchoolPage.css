@@ -1,0 +1,42 @@
+/* SchoolPage.css */
+
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .dark-mode {
+    background-color: #121212;
+    color: white;
+  }
+  
+  .card-box {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .dark-mode .card-box {
+    background-color: #1e1e1e;
+    color: white;
+  }
+  
+  .chart-box {
+    background-color: #f3f4f6;
+    color: black;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .dark-mode .chart-box {
+    background-color: #2b2b2b;
+    color: white;
+  }
+  
+  .toggle-button {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+  
