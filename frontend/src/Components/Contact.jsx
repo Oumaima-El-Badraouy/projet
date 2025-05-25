@@ -109,7 +109,7 @@ function Contact() {
               </div>
               <div className="ml-4">
                 <p className="text-gray-500">Email</p>
-                <h5 className="text-lg font-semibold">contact@dalleel.com</h5>
+                <h5 className="text-lg font-semibold">contact@Tawjih360.com</h5>
               </div>
             </div>
           </div>

@@ -15,12 +15,12 @@ const About = () => {
             {/* <img
               className="w-3/4 rounded-lg"
               src={OIP}
-              alt="À propos de DALLEEL"
+              alt="À propos de Tawjih 360"
             /> */}
            <img
               className="w-1/2 rounded-lg bg-white p-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
               src={OIP}
-              alt="Caractéristiques de DALLEEL"
+              alt="Caractéristiques de Tawjih 360"
             /> 
           </div>
           <div>
@@ -28,10 +28,10 @@ const About = () => {
               À propos de nous
             </p>
             <h1 className="text-2xl font-bold mt-4">
-              Pourquoi choisir DALLEEL pour votre orientation ?
+              Pourquoi choisir Tawjih 360 pour votre orientation ?
             </h1>
             <p className="mt-4 text-gray-600">
-              DALLEEL est une plateforme qui vous aide à choisir votre parcours académique en comparant les établissements, en réalisant des tests d’orientation comme SWOT et en recevant des conseils d’experts en éducation.
+              Tawjih 360 est une plateforme qui vous aide à choisir votre parcours académique en comparant les établissements, en réalisant des tests d’orientation comme SWOT et en recevant des conseils d’experts en éducation.
             </p>
             <ul className="mt-4 space-y-2">
               <li className="flex items-center">
@@ -57,7 +57,7 @@ const About = () => {
               <p className="inline-block border border-black rounded-full py-1 px-4">
                 Fonctionnalités
               </p>
-              <h1 className="text-2xl font-bold mt-4">Pourquoi choisir DALLEEL ?</h1>
+              <h1 className="text-2xl font-bold mt-4">Pourquoi choisir Tawjih 360 ?</h1>
               <p className="mt-4">
                 Nous vous offrons une expérience complète pour vous aider à choisir votre avenir académique en toute confiance.
               </p>
@@ -72,7 +72,7 @@ const About = () => {
               <img
                 className="rounded-lg w-full"
                 src={OIP1}
-                alt="Fonctionnalités de DALLEEL"
+                alt="Fonctionnalités de Tawjih 360"
               />
             </div>
           </div>

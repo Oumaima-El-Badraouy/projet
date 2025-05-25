@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useNavigate } from 'react-router-dom';
-import { Bar } from 'react-chartjs-2';
-import './SchoolPage.css'; // 👉 Assure-toi d'importer le CSS
+import { Bar, Pie } from 'react-chartjs-2';
+
+import './SchoolPage.css';
+
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement, // 👈 Ajouté pour Pie chart
   Title,
   Tooltip,
   Legend
 } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
 function SchoolPage() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(false);
-  const [connectedStudents, setConnectedStudents] = useState();
-  const [disconnectedStudents, setDisconnectedStudents] = useState();
-  const [disconnectedDomaines, setDisconnectedDomaines] = useState();
+  const [connectedStudents, setConnectedStudents] = useState(0);
+  const [disconnectedStudents, setDisconnectedStudents] = useState(0);
+  const [disconnectedDomaines, setDisconnectedDomaines] = useState(0);
 
   const fetchData = async () => {
     try {
@@ -43,26 +46,34 @@ function SchoolPage() {
   }, [darkMode]);
 
   const chartDataEcoles = {
-    labels: ['École A', 'École B', 'École C'],
+    labels: ['BTS', 'EST', 'ENSAM','OFPPT'],
     datasets: [
       {
         label: 'Consultations Écoles',
-        data: [50, 80, 30],
-        backgroundColor: 'rgba(11, 70, 234, 0.99)',
-        borderColor: 'rgb(13, 111, 239)',
+        data: [40, 80, 30,10],
+        backgroundColor: '#1E88E5',
+        borderColor: '#1E88E5',
         borderWidth: 1,
       },
     ],
   };
 
   const chartDataDomaines = {
-    labels: ['Domaine 1', 'Domaine 2', 'Domaine 3'],
+    labels: ['Informatique', 'Gestion','Economie'],
     datasets: [
       {
         label: 'Consultations Domaines',
         data: [120, 70, 90],
-        backgroundColor: 'rgba(235, 17, 13, 0.6)',
-        borderColor: 'rgb(226, 18, 18)',
+        backgroundColor: [
+          '#FDD835',
+          '#1E88E5',
+          '#43A047',
+        ],
+        borderColor: [
+         '#FDD835',
+         '#1E88E5',
+          '#43A047',
+        ],
         borderWidth: 1,
       },
     ],
@@ -80,67 +91,76 @@ function SchoolPage() {
   };
 
   return (
-    <div className="flex-1 ml-72 p-5">
-      <div style={{ textAlign: 'right' }}>
-        <button className="toggle-button" onClick={() => setDarkMode(!darkMode)}>
-          {darkMode ? '☀️ Mode clair' : '🌙 Mode sombre'}
-        </button>
-      </div>
+    <div className="flex-1 ml-72 p-5  min-h-screen">
+  <div className="flex justify-end mb-6">
+    <button
+      className="px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 transition text-sm"
+      onClick={() => setDarkMode(!darkMode)}
+    >
+      {darkMode ? '☀️ Mode clair' : '🌙 Mode sombre'}
+    </button>
+  </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <div 
-          className="card-box border-2 border-green-500 w-64 rounded-lg p-2 flex items-center shadow-md cursor-pointer" 
-          onClick={() => navigate("/Étudiants_connectés")}
-          role="button"
-        >
-          <i className="bi bi-person-check text-green-500 text-4xl mr-4"></i>
-          <div>
-            <h2 className="text-lg font-semibold">Étudiants connectés</h2>
-            <p className="text-xl font-bold">{connectedStudents}</p>
-          </div>
-        </div>
-
-        <div 
-          className="card-box border-2 border-red-500 w-64 rounded-lg p-2 flex items-center shadow-md cursor-pointer" 
-          onClick={() => navigate("/Étudiants_non_connectés")}
-          role="button"
-        >
-          <i className="bi bi-person-x text-red-500 text-4xl mr-4"></i>
-          <div>
-            <h2 className="text-lg font-semibold">Étudiants non connectés</h2>
-            <p className="text-xl font-bold">{disconnectedStudents}</p>
-          </div>
-        </div>
-
-        <div 
-          className="card-box border-2 border-blue-500 w-64 rounded-lg p-2 flex items-center shadow-md cursor-pointer" 
-          onClick={() => navigate("/Domaines")}
-          role="button"
-        >
-          <i className="bi bi-book-half text-blue-500 text-4xl mr-4"></i>
-          <div>
-            <h2 className="text-lg font-semibold">Les Domaines</h2>
-            <p className="text-xl font-bold">{disconnectedDomaines}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex justify-between mt-20">
-        <div className="chart-box w-1/2 px-2 rounded-lg shadow-lg p-4">
-          <h2 className="text-lg font-semibold text-center mb-4">Écoles les plus consultées</h2>
-          <div style={{ width: '90%', height: '250px' }}>
-            <Bar data={chartDataEcoles} options={chartOptions} />
-          </div>
-        </div>
-
-        <div className="chart-box w-1/2 px-2 rounded-lg shadow-lg p-4">
-          <h2 className="text-lg font-semibold text-center mb-4">Domaines les plus consultés</h2>
-          <div style={{ width: '90%', height: '250px' }}>
-            <Bar data={chartDataDomaines} options={chartOptions} />
-          </div>
+  {/* Cartes statistiques */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div 
+      className="bg-white border-l-4 border-green-700 rounded-2xl p-4 shadow-lg cursor-pointer hover:shadow-xl transition"
+      onClick={() => navigate("/Étudiants_connectés")}
+    >
+      <div className="flex items-center">
+        <i className="bi bi-person-check text-green-700 text-3xl mr-4"></i>
+        <div>
+          <h2 className="text-lg font-semibold">Étudiants connectés</h2>
+          <p className="text-2xl font-bold">{connectedStudents}</p>
         </div>
       </div>
     </div>
+
+    <div 
+      className="bg-white border-l-4 border-yellow-400 rounded-2xl p-4 shadow-lg cursor-pointer hover:shadow-xl transition"
+      onClick={() => navigate("/Étudiants_non_connectés")}
+    >
+      <div className="flex items-center">
+        <i className="bi bi-person-x text-yellow-500 text-3xl mr-4"></i>
+        <div>
+          <h2 className="text-lg font-semibold">Étudiants non connectés</h2>
+          <p className="text-2xl font-bold">{disconnectedStudents}</p>
+        </div>
+      </div>
+    </div>
+
+    <div 
+      className="bg-white border-l-4 border-blue-400 rounded-2xl p-4 shadow-lg cursor-pointer hover:shadow-xl transition"
+      onClick={() => navigate("/Domaines")}
+    >
+      <div className="flex items-center">
+        <i className="bi bi-book-half text-blue-400 text-3xl mr-4"></i>
+        <div>
+          <h2 className="text-lg font-semibold">Les Domaines</h2>
+          <p className="text-2xl font-bold">{disconnectedDomaines}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* Section des graphiques */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+    <div className="bg-white rounded-2xl shadow-lg p-6">
+      <h2 className="text-lg font-semibold text-center mb-6" id="ecoles">🎓 Écoles les plus consultées</h2>
+      <div className="w-full h-64">
+        <Bar data={chartDataEcoles} options={chartOptions} />
+      </div>
+    </div>
+
+    <div className="bg-white rounded-2xl shadow-lg p-6">
+      <h2 className="text-lg font-semibold text-center mb-6">📚 Domaines les plus consultés</h2>
+      <div className="w-full h-64">
+        <Pie data={chartDataDomaines} />
+      </div>
+    </div>
+  </div>
+</div>
+
   );
 }
 

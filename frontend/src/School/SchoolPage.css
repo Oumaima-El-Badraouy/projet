@@ -1,42 +1,36 @@
-/* SchoolPage.css */
+/* Styles pour le mode sombre */
+.dark-mode {
+  background-color: #121212;
+  color: white;
+}
 
-body {
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .dark-mode {
-    background-color: #121212;
-    color: white;
-  }
-  
-  .card-box {
-    background-color: white;
-    color: black;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .dark-mode .card-box {
-    background-color: #1e1e1e;
-    color: white;
-  }
-  
-  .chart-box {
-    background-color: #f3f4f6;
-    color: black;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .dark-mode .chart-box {
-    background-color: #2b2b2b;
-    color: white;
-  }
-  
-  .toggle-button {
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 1rem;
-    font-weight: bold;
-  }
-  
+/* Modifier la couleur du texte en mode sombre */
+.dark-mode .card-box,
+.dark-mode .chart-box,
+.dark-mode .toggle-button,
+.dark-mode .ecoles {
+  color: rgb(16, 14, 14);  /* Changez la couleur du texte en noir */
+}
+
+/* Pour les cartes */
+.dark-mode .card-box, 
+.dark-mode .chart-box {
+  background-color: #1e1e1e;
+  color: rgb(4, 3, 3);  /* Texte en noir */
+}
+
+/* Bouton de mode sombre */
+.dark-mode .toggle-button {
+  color: #ccc;
+}
+
+/* Pour les titres dans les cartes et graphiques */
+.dark-mode h2,
+.dark-mode p {
+  color: black;  /* Texte en noir */
+}
+
+/* Vous pouvez également ajouter des règles pour chaque section spécifique */
+.dark-mode .text-lg, .dark-mode .font-semibold, .dark-mode .text-2xl {
+  color: black;  /* Vous pouvez ajuster la couleur des titres, si nécessaire */
+}

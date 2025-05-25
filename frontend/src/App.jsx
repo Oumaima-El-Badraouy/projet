@@ -18,6 +18,11 @@ import EtudiantsConnecté  from "./School/Users/etudiants_connecté";
 import Domaines  from "./School/Users/Domaines";
 import Evenements  from "./School/Users/Evenements";
 
+import UserPage from "./UsersE/UserPage";
+import EcoleDetails from "./UsersE/EcoleDetails";
+import Register from "./SUser/register.jsx";
+import Test from "./UsersE/Test";
+
 function App() {
     return (
    <Router>
@@ -33,9 +38,11 @@ function App() {
                     <Route path="/Home" element={<Home />} /> 
                     <Route path="/Forgotpassword" element={<Forgotpassword />} /> 
                     <Route path="/reset-password/:token" element={<ResetPassword />} />
-                
-
-                </Route>
+               
+                </Route> <Route path="user/:id" element={<UserPage />} />
+                <Route path="/Register" element={<Register />} />
+                 <Route path="/ecole/:id" element={<EcoleDetails />} />
+                 <Route path="/test" element={<Test />} />
                 <Route path="/" element={<Menuuser />} >
                     <Route path="/school/:id" element={<SchoolPage />} />
                     <Route path="/ecoles" element={<Ecoles />} />
@@ -44,6 +51,7 @@ function App() {
                    <Route path="/Domaines" element={<Domaines />} />
                    <Route path="/Evenement" element={<Evenements />} />
                 </Route>  
+                 
             </Routes>
     </Router>
     );

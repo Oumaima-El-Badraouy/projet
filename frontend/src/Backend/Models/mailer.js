@@ -60,7 +60,7 @@ const sendEmailToUsers = async (emails, subject, message) => {
         </head>
         <body>
           <div class="email-container">
-               <h1>DALLEL</h1>
+               <h1>Tawjih 360</h1>
             <h3>${subject}</h3>
             <p>Bonjour,</p>
             <p>Un nouvel événement a été ajouté :</p>

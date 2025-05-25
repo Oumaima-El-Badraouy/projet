@@ -49,7 +49,7 @@ function Login() {
   return (
     <div className='login-container'>
       <div className='text-box'>
-        <h1 className='logo'>DALLEEL</h1>
+        <h1 className='logo'>Tawjih 360</h1>
         <h4 className='subtitle'>Ensemble vers un <br /> meilleur avenir !</h4>
       </div>
 

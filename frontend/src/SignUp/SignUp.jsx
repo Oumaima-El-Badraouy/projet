@@ -228,7 +228,7 @@ export default function SingUp () {
                 <div className='lg:w-1/2 xl:w-1/2 2xl:w-1/2 md:w-full sm:w-full text-center h-1/2 grid place-items-center'>
                     <div>
                     <h1 className='mb-4 text-4xl text-blue-700 font-extrabold leading-none tracking-tight md:text-5xl lg:text-5xl dark:text-white'>
-                            DALLEEL
+                            Tawjih 360
                         </h1>
                         <p className='lg:text-3xl text-2xl font-bold'>
                             Ensemble vers un meilleur avenir !
@@ -270,6 +270,8 @@ export default function SingUp () {
                         </div>
                         <Link to={'/Login'} className='mb-3 block'>
                             Déjà inscrit ? <button className='text-blue-600'>Se connecter</button>
+                        </Link> <Link to={'/Register'} className='mb-3 block'>
+                            tu es un etudiant ? <button className='text-blue-600'>Inscrivez</button>
                         </Link>
                         <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
                     </form>

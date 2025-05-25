@@ -12,7 +12,7 @@ function Menuuser() {
       <nav className="bg-blue-500 w-70 min-h-screen p-4 text-white flex flex-col fixed">
         <div className="flex items-center space-x-3 mb-6">
           <img src={DALLEEL} className="h-10" alt="Logo" />
-          <span className="text-3xl font-semibold">DALLEEL</span>
+          <span className="text-3xl font-semibold">Tawjih 360</span>
         </div>
 
         <ul className="flex flex-col space-y-4">
@@ -85,9 +85,9 @@ function Menuuser() {
           <NavLink 
             to="/"
             onClick={() => localStorage.removeItem("schoolId")}
-            className="block py-2 px-4 bg-red-500 rounded hover:bg-gray-700"
+            className="block py-2 px-4 hover:bg-red-500 font-bold"
           >
-            <i className="bi bi-box-arrow-right"></i> Déconnexion
+            <i className="bi bi-box-arrow-right  "></i> Déconnexion
           </NavLink>
         </ul>
       </nav>
