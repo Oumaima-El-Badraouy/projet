@@ -1,6 +1,8 @@
 import express  from 'express';
 import mongoose  from 'mongoose';
 import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -8,7 +10,7 @@ import User from '../Models/User.js';
 import School from '../Models/School.js';
 import Contacts from '../Models/Contact.js';
 // Connecter MongoDB
-mongoose.connect("mongodb+srv://omaimaelbdraouy:r9oc2gzlMHYB0ZEH@cluster0.uapyf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect(process.env.Mongodb)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 app.post("/api/contact", async (req, res) => {
@@ -54,7 +56,7 @@ app.post('/api/check-login', async (req, res) => {
   return res.status(400).json({ message: 'Email non trouvé'});
 });
 
-
-app.listen(5001, () => {
-  console.log('Server is running on port 5000');
+const Port=process.env.Port || 5001;
+app.listen(Port, () => {
+  console.log(`Server is running on port ${Port}`);
 });
